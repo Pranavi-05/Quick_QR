@@ -63,12 +63,12 @@ export default function BulkQRGenerator() {
       style={{
         padding: "40px",
         fontFamily: "Inter, sans-serif",
-        backgroundColor: "#f9f9f9",
+        backgroundColor: "#fef8f5",
         minHeight: "100vh",
         color: "#333",
       }}
     >
-      <h1 style={{ fontSize: "28px", marginBottom: "20px" }}>
+      <h1 style={{ fontSize: "28px", marginBottom: "20px", color: "#ff6f50" }}>
         Bulk QR Code Generator
       </h1>
 
@@ -79,14 +79,15 @@ export default function BulkQRGenerator() {
         placeholder="Enter emails here, one per line"
         style={{
           width: "100%",
-          padding: "12px",
-          fontSize: "14px",
-          borderRadius: "6px",
-          border: "1px solid #ccc",
+          padding: "14px",
+          fontSize: "15px",
+          borderRadius: "10px",
+          border: "1px solid #ffc1a1",
           marginBottom: "20px",
           resize: "vertical",
-          backgroundColor: "#fff",
+          backgroundColor: "#fffaf7",
           outline: "none",
+          transition: "border 0.2s",
         }}
       />
 
@@ -94,13 +95,17 @@ export default function BulkQRGenerator() {
         onClick={downloadPDF}
         disabled={!emailsText.trim()}
         style={{
-          padding: "10px 20px",
-          fontSize: "15px",
+          padding: "12px 25px",
+          fontSize: "16px",
           cursor: emailsText.trim() ? "pointer" : "not-allowed",
-          backgroundColor: emailsText.trim() ? "#000" : "#999",
+          backgroundColor: emailsText.trim() ? "#ff8c66" : "#ffc4b2",
           color: "#fff",
           border: "none",
-          borderRadius: "6px",
+          borderRadius: "8px",
+          boxShadow: emailsText.trim()
+            ? "0 4px 12px rgba(255, 140, 102, 0.3)"
+            : "none",
+          transition: "all 0.2s ease-in-out",
         }}
       >
         Download PDF
@@ -111,7 +116,7 @@ export default function BulkQRGenerator() {
           display: "flex",
           flexWrap: "wrap",
           marginTop: "30px",
-          gap: "12px",
+          gap: "15px",
         }}
       >
         {emailsText
@@ -125,12 +130,24 @@ export default function BulkQRGenerator() {
                 qrRefs.current[index] = el;
               }}
               style={{
-                width: 140,
-                padding: 8,
+                width: 150,
+                padding: 10,
                 textAlign: "center",
-                borderRadius: "6px",
+                borderRadius: "12px",
                 backgroundColor: "#fff",
-                border: "1px solid #e0e0e0",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => {
+                const target = e.currentTarget;
+                target.style.transform = "translateY(-3px)";
+                target.style.boxShadow = "0 8px 18px rgba(0,0,0,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                const target = e.currentTarget;
+                target.style.transform = "translateY(0)";
+                target.style.boxShadow = "0 4px 10px rgba(0,0,0,0.08)";
               }}
             >
               <QRCodeCanvas value={email} size={100} />
@@ -138,7 +155,7 @@ export default function BulkQRGenerator() {
                 style={{
                   fontSize: "12px",
                   color: "#000",
-                  marginTop: "6px",
+                  marginTop: "8px",
                   wordBreak: "break-word",
                 }}
               >
