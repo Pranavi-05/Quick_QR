@@ -6,8 +6,8 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 export default function BulkQRGenerator() {
-  const [emailsText, setEmailsText] = useState(""); // Input for multiple emails
-  const qrRefs = useRef([]);
+  const [emailsText, setEmailsText] = useState("");
+  const qrRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const downloadPDF = async () => {
     const emails = emailsText
@@ -23,7 +23,7 @@ export default function BulkQRGenerator() {
 
     const padding = 10;
     const qrSize = 80;
-    const cols = 2; // 2 QR codes per row
+    const cols = 2;
 
     let x = 10;
     let y = 10;
@@ -33,7 +33,6 @@ export default function BulkQRGenerator() {
       const element = qrRefs.current[i];
       if (!element) continue;
 
-      // Capture QR + email block in high resolution
       const canvas = await html2canvas(element, { scale: 4, useCORS: true });
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
@@ -60,21 +59,34 @@ export default function BulkQRGenerator() {
   };
 
   return (
-    <div style={{ padding: "30px", fontFamily: "Arial" }}>
-      <h1>Bulk QR Code Generator</h1>
-      <p>Enter emails, one per line:</p>
+    <div
+      style={{
+        padding: "40px",
+        fontFamily: "Inter, sans-serif",
+        backgroundColor: "#f9f9f9",
+        minHeight: "100vh",
+        color: "#333",
+      }}
+    >
+      <h1 style={{ fontSize: "28px", marginBottom: "20px" }}>
+        Bulk QR Code Generator
+      </h1>
+
       <textarea
-        rows={10}
+        rows={8}
         value={emailsText}
         onChange={(e) => setEmailsText(e.target.value)}
         placeholder="Enter emails here, one per line"
         style={{
           width: "100%",
-          padding: "10px",
+          padding: "12px",
           fontSize: "14px",
           borderRadius: "6px",
           border: "1px solid #ccc",
           marginBottom: "20px",
+          resize: "vertical",
+          backgroundColor: "#fff",
+          outline: "none",
         }}
       />
 
@@ -83,9 +95,9 @@ export default function BulkQRGenerator() {
         disabled={!emailsText.trim()}
         style={{
           padding: "10px 20px",
-          fontSize: "16px",
+          fontSize: "15px",
           cursor: emailsText.trim() ? "pointer" : "not-allowed",
-          backgroundColor: emailsText.trim() ? "#0070f3" : "#999",
+          backgroundColor: emailsText.trim() ? "#000" : "#999",
           color: "#fff",
           border: "none",
           borderRadius: "6px",
@@ -94,7 +106,14 @@ export default function BulkQRGenerator() {
         Download PDF
       </button>
 
-      <div style={{ display: "flex", flexWrap: "wrap", marginTop: "30px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          marginTop: "30px",
+          gap: "12px",
+        }}
+      >
         {emailsText
           .split("\n")
           .map((email) => email.trim())
@@ -102,19 +121,29 @@ export default function BulkQRGenerator() {
           .map((email, index) => (
             <div
               key={index}
-              ref={(el) => (qrRefs.current[index] = el)}
+              ref={(el) => {
+                qrRefs.current[index] = el;
+              }}
               style={{
-                width: 150,
-                margin: 10,
+                width: 140,
+                padding: 8,
                 textAlign: "center",
-                padding: 10,
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                background: "#fff",
+                borderRadius: "6px",
+                backgroundColor: "#fff",
+                border: "1px solid #e0e0e0",
               }}
             >
               <QRCodeCanvas value={email} size={100} />
-              <p style={{ fontSize: "12px", color: "#000", marginTop: "8px" }}>{email}</p>
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "#000",
+                  marginTop: "6px",
+                  wordBreak: "break-word",
+                }}
+              >
+                {email}
+              </p>
             </div>
           ))}
       </div>
